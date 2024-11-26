@@ -18,9 +18,11 @@ export class TodoListComponent {
     this.getTodoData();
   }
   getTodoData(): void {
-    this.todoApiService.getTodos().subscribe((data) => {
-      this.todoList = data;
-    });
+    try {
+      this.todoApiService.getTodos().subscribe((data) => {
+        this.todoList = data;
+      });
+    }catch(err){}
   }
   edit(id: number): void {
     this.router.navigate(['/edit', id]);
@@ -28,7 +30,9 @@ export class TodoListComponent {
 
   delete(todoId: number) {
     if (confirm('Are you sure want to delete this todo?')) {
-      this.todoApiService.deleteTodo(todoId).subscribe();
+      try {
+        this.todoApiService.deleteTodo(todoId).subscribe();
+      }catch(err){}
       alert('Data deleted successfully');
       this.getTodoData();
     } else {

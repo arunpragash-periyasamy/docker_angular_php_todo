@@ -39,12 +39,14 @@ export class AddTodoComponent implements OnInit {
     const idParam = this.route.snapshot.paramMap.get('id');
     this.editId = idParam ? parseInt(idParam, 10) : 0;
     if (!isNaN(this.editId)) {
-      this.todoAPIService.getTodoById(this.editId).subscribe(data => {
-        this.oldTodo = data;
-        if (this.oldTodo) {
-          this.form.patchValue(this.oldTodo);
-        }
-      });
+      try {
+        this.todoAPIService.getTodoById(this.editId).subscribe(data => {
+          this.oldTodo = data;
+          if (this.oldTodo) {
+            this.form.patchValue(this.oldTodo);
+          }
+        });
+      }catch(err){}
     }
   }
 
@@ -52,36 +54,40 @@ export class AddTodoComponent implements OnInit {
     this.form.markAllAsTouched();
     if (this.form.valid) {
       if (this.editId > 0 && this.oldTodo) {
-        this.todoAPIService.updateTodo({
-          ...this.form.value,
-          id: this.editId,
-          isCompleted: false,
-          createdAt: this.oldTodo?.createdAt,
-          updatedAt: new Date(),
-        }).subscribe(data => {
-          alert("Todo updated");
-          this.form.reset();
-          this.router.navigate(['/todo-list']);
-        });
-      } else {
-        // const id = this.todoStorageService.generateId();
-        this.todoAPIService
-          .addTodo({
+        try {
+          this.todoAPIService.updateTodo({
             ...this.form.value,
-            id: 0,
+            id: this.editId,
             isCompleted: false,
-            createdAt: new Date(),
+            createdAt: this.oldTodo?.createdAt,
             updatedAt: new Date(),
-          })
-          .subscribe({
-            next: (response) => {
-              this.form.reset();
-              alert("Todo created");
-            },
-            error: (err) => {
-              console.error('Error adding Todo:', err);
-            },
+          }).subscribe(data => {
+            alert("Todo updated");
+            this.form.reset();
+            this.router.navigate(['/todo-list']);
           });
+        }catch(err){}
+      } else {
+        try {
+          this.todoAPIService
+            .addTodo({
+              ...this.form.value,
+              id: 0,
+              isCompleted: false,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+            })
+            .subscribe({
+              next: (response) => {
+                this.form.reset();
+                alert("Todo created");
+              },
+              error: (err) => {
+                console.error('Error adding Todo:', err);
+              },
+            });
+        }
+        catch (err) { }
       }
       console.log(this.todoStorageService.getTodoList());
     }
