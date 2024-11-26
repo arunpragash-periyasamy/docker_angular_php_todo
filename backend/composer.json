@@ -1,0 +1,18 @@
+    {
+        "name": "arunpragash/todo_backend",
+        "description": "Creating a backend API microservice for the todo application.",
+        "autoload": {
+            "psr-4": {
+                "Arunpragash\\TodoBackend\\": "src/"
+            }
+        },
+        "authors": [
+            {
+                "name": "arunpragash-periyasamy",
+                "email": "arunpragash46@gmail.com"
+            }
+        ],
+        "require": {
+            "sergeytsalkov/meekrodb": "^3.1"
+        }
+    }

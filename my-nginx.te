@@ -1,0 +1,17 @@
+
+module my-nginx 1.0;
+
+require {
+	type tor_port_t;
+	type proc_t;
+	type container_t;
+	type httpd_t;
+	class tcp_socket name_bind;
+	class filesystem associate;
+}
+
+#============= container_t ==============
+allow container_t proc_t:filesystem associate;
+
+#============= httpd_t ==============
+allow httpd_t tor_port_t:tcp_socket name_bind;
